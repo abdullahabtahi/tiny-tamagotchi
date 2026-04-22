@@ -2,6 +2,8 @@
 
 > a calm companion you keep open in a background tab
 
+![Tiny Tamagotchi — evolved state](Demo.png)
+
 A tiny virtual pet built for the **DeepLearning.AI 7-Day Tamagotchi Challenge**.
 One Lumi per user. Three stats. Three actions. No accounts, no notifications, no ads.
 It hatches from a name and lives in a browser tab for as long as you let it.
