@@ -7,6 +7,7 @@
 export const TICK_INTERVAL_MS = 30_000; // specs/tech-stack.md — Data Flow
 export const DECAY = { hunger: 3, happiness: 2, energy: 1 }; // living-vitals R2
 export const ACTION_GAIN = { feed: 20, play: 15, rest: 25 }; // care-loop R1–R3
+export const ACTION_COST = { play: 10, rest: 5 };  // care-loop R1–R3 — cross-stat tradeoffs
 export const POOP_PLAY_BONUS = 3; // personality R7
 export const POOP_DELAY_MS = 300_000; // personality R6 — 5 minutes
 export const EVOLUTION_TICKS = 18; // dynamic-states R4
@@ -90,6 +91,7 @@ export function play(state) {
   return {
     ...state,
     happiness: clamp(state.happiness + ACTION_GAIN.play, 0, 100),
+    energy: clamp(state.energy - ACTION_COST.play, 0, 100),
     lastInteractedAt: Date.now(),
   };
 }
@@ -98,6 +100,7 @@ export function rest(state) {
   return {
     ...state,
     energy: clamp(state.energy + ACTION_GAIN.rest, 0, 100),
+    happiness: clamp(state.happiness - ACTION_COST.rest, 0, 100),
     lastInteractedAt: Date.now(),
   };
 }

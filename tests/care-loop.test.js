@@ -45,10 +45,17 @@ describe('play', () => {
     const next = play(baseState);
     expect(next.happiness).toBe(65);
   });
-  it('does not change hunger or energy', () => {
+  it('does not change hunger', () => {
     const next = play(baseState);
     expect(next.hunger).toBe(50);
-    expect(next.energy).toBe(50);
+  });
+  it('reduces energy by 10 (tradeoff cost)', () => {
+    const next = play(baseState);
+    expect(next.energy).toBe(40);
+  });
+  it('clamps energy at 0 when energy is below cost', () => {
+    const next = play({ ...baseState, energy: 5 });
+    expect(next.energy).toBe(0);
   });
   it('clamps happiness at 100', () => {
     const next = play({ ...baseState, happiness: 90 });
@@ -70,10 +77,17 @@ describe('rest', () => {
     const next = rest(baseState);
     expect(next.energy).toBe(75);
   });
-  it('does not change hunger or happiness', () => {
+  it('does not change hunger', () => {
     const next = rest(baseState);
     expect(next.hunger).toBe(50);
-    expect(next.happiness).toBe(50);
+  });
+  it('reduces happiness by 5 (tradeoff cost)', () => {
+    const next = rest(baseState);
+    expect(next.happiness).toBe(45);
+  });
+  it('clamps happiness at 0 when happiness is below cost', () => {
+    const next = rest({ ...baseState, happiness: 3 });
+    expect(next.happiness).toBe(0);
   });
   it('clamps energy at 100', () => {
     const next = rest({ ...baseState, energy: 80 });
@@ -94,20 +108,21 @@ describe('rest', () => {
   });
 });
 
-describe('single-stat rule', () => {
-  it('feed only changes hunger', () => {
-    const keys = ['happiness', 'energy', 'state'];
+describe('action tradeoffs', () => {
+  it('feed only changes hunger (no cross-stat cost)', () => {
     const next = feed(baseState);
-    keys.forEach(k => expect(next[k]).toBe(baseState[k]));
+    expect(next.happiness).toBe(baseState.happiness);
+    expect(next.energy).toBe(baseState.energy);
+    expect(next.state).toBe(baseState.state);
   });
-  it('play only changes happiness', () => {
-    const keys = ['hunger', 'energy', 'state'];
+  it('play raises happiness and costs energy', () => {
     const next = play(baseState);
-    keys.forEach(k => expect(next[k]).toBe(baseState[k]));
+    expect(next.happiness).toBeGreaterThan(baseState.happiness);
+    expect(next.energy).toBeLessThan(baseState.energy);
   });
-  it('rest only changes energy', () => {
-    const keys = ['hunger', 'happiness', 'state'];
+  it('rest raises energy and costs happiness', () => {
     const next = rest(baseState);
-    keys.forEach(k => expect(next[k]).toBe(baseState[k]));
+    expect(next.energy).toBeGreaterThan(baseState.energy);
+    expect(next.happiness).toBeLessThan(baseState.happiness);
   });
 });
