@@ -2,6 +2,8 @@
 
 > a calm companion you keep open in a background tab
 
+**[▶ Live Demo → my-tamagotchi.vercel.app](https://my-tamagotchi.vercel.app)**
+
 ![Tiny Tamagotchi — evolved state](Demo.png)
 
 A tiny virtual pet built for the **DeepLearning.AI 7-Day Tamagotchi Challenge**.
